@@ -1,0 +1,60 @@
+# Syntax docs are here:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+# Docs for the Bitovi Actions:
+# - https://github.com/bitovi/github-actions-deploy-docker-to-ec2
+# - https://github.com/bitovi/github-actions-deploy-ecs
+#
+############################################################
+name: Deploy to EC2
+on:
+  push:
+    branches: [ master ]
+
+    # DON'T run if only either of these files are changed.
+    # If any other files are also changed, the workflow *will* run.
+    paths-ignore:
+      - README.md
+
+jobs:
+  EC2-Deploy:
+    runs-on: ubuntu-latest
+    # environment: 
+    #   name: EC2
+    #   url: ${{ steps.ec2.outputs.vm_url }}
+
+    # ensures last-in-first-out ordering
+    concurrency:
+      group: ec2
+      cancel-in-progress: true
+    
+    steps:
+      - name: Deploy to EC2
+        id: ec2
+        uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.0
+        with:
+          checkout: true # default is true, here for illustrative purposes
+
+          # To SPIN UP use false, to DESTROY use true
+          # tf_state_bucket_destroy only takes effect when stack_destroy is true.
+          # stack_destroy: true
+          tf_state_bucket_destroy: true
+
+          # These are required UNLESS you add an AWS login action to your workflow.
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID_SANDBOX }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SANDBOX }}
+          
+          aws_default_region: us-east-1
+
+          # Set to the port your app/container is listening on
+          aws_elb_app_port: 8000
+
+          # Ensures no collision with other resources from this repo/workflow
+          aws_resource_identifier: deno-fork-ec2
+
+          # Turn on Route53 DNS
+          # Requires configuring R53 in your AWS account.
+          aws_r53_enable: true
+          aws_r53_domain_name: bitovi-sandbox.com
+          aws_r53_sub_domain_name: deno-fork-ec2
+          aws_r53_enable_cert: true
