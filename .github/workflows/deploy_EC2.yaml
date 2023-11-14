@@ -19,9 +19,9 @@ on:
 jobs:
   EC2-Deploy:
     runs-on: ubuntu-latest
-    # environment: 
-    #   name: EC2
-    #   url: ${{ steps.ec2.outputs.vm_url }}
+    environment: 
+      name: EC2
+      url: ${{ steps.ec2.outputs.vm_url }}
 
     # ensures last-in-first-out ordering
     concurrency:
