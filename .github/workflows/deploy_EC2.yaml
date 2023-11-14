@@ -9,7 +9,7 @@
 name: Deploy to EC2
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
     # DON'T run if only either of these files are changed.
     # If any other files are also changed, the workflow *will* run.
