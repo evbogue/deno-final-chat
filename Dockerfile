@@ -6,4 +6,6 @@ WORKDIR /app
 
 USER deno
 
+COPY . .
+
 CMD ["deno", "run", "--allow-all", "--unstable", "serve.js"]
