@@ -1,6 +1,7 @@
 import { h } from './lib/h.js'
 import { human } from './lib/human.js'
 import { avatar } from './avatar.js'
+import { ws } from './ws.js'
 
 export const render = async (m) => {
   const pubkey = await avatar(m.author)
@@ -10,6 +11,12 @@ export const render = async (m) => {
   const ts = h('span', [human(new Date(m.timestamp))])
 
   const raw = h('code')
+
+  const prev = h('a', {
+    onclick: () => {
+      ws.send(m.previous)
+    }
+  }, [h('code', ['prev'])])
 
   const rawButton = h('a', {
     href: '',
@@ -27,6 +34,8 @@ export const render = async (m) => {
 
   const right = h('span', {style: 'float: right;'}, [
     rawButton,
+    ' ',
+    prev,
     ' ',
     h('code', [m.author.substring(0, 7)]),
     ' ',
