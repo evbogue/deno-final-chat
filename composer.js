@@ -17,7 +17,7 @@ const searchButton = h('button', {onclick: () => {
   }
 }}, ['Search'])
 
-const searchDiv = h('div', {style: 'float: right;'}, [
+const searchDiv = h('span', {style: 'float: right;'}, [
   search, 
   searchButton
 ])
@@ -86,12 +86,12 @@ const button = h('button', {
 }, ['Send'])
 
 export const composer = h('div', {classList: 'message'}, [
+  searchDiv,
   id,
   textarea,
   h('br'),
   button,
   ' ',
   to,
-  searchDiv,
 ])
 
