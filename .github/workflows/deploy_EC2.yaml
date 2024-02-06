@@ -37,7 +37,7 @@ jobs:
 
           # To SPIN UP use false, to DESTROY use true
           # tf_state_bucket_destroy only takes effect when stack_destroy is true.
-          # stack_destroy: true
+          tf_stack_destroy: true
           tf_state_bucket_destroy: true
 
           # These are required UNLESS you add an AWS login action to your workflow.
